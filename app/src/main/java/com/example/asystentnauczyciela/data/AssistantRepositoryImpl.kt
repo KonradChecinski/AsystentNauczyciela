@@ -2,6 +2,7 @@ package com.example.asystentnauczyciela.data
 
 import com.example.asystentnauczyciela.data.entities.Grade
 import com.example.asystentnauczyciela.data.entities.Student
+import com.example.asystentnauczyciela.data.relations.StudentWithGrades
 import kotlinx.coroutines.flow.Flow
 
 class AssistantRepositoryImpl(
@@ -27,7 +28,12 @@ class AssistantRepositoryImpl(
         return dao.getStudents()
     }
 
-//    override suspend fun getStudentWithGrades(studentId: Int): List<StudentWithGrades> {
-//        return dao.getStudentWithGrades(studentId)
+    override suspend fun getStudentWithGrades(studentId: Int): List<StudentWithGrades> {
+        return dao.getStudentWithGrades(studentId)
+    }
+
+//    override suspend fun getStudentWithGradesInCourse(studentId: Int, classId: Int): List<StudentWithGrades>{
+//        return dao.getStudentWithGradesInCourse(studentId, classId)
 //    }
+
 }

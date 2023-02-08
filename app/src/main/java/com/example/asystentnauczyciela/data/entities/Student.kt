@@ -8,4 +8,5 @@ data class Student(
     @PrimaryKey val studentId: Int? = null,
     val name: String,
     val lastName: String,
+    val albumNumber: String,
 )
