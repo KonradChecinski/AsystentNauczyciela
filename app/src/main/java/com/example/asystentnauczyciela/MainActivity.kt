@@ -23,8 +23,16 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
-                    startDestination = Routes.TODO_LIST
+                    startDestination = Routes.CLASS_LIST
                 ) {
+                    composable(Routes.CLASS_LIST) {
+                        // Do zmiany jak dodasz widok :)
+                        TodoListScreen(
+                            onNavigate = {
+                                navController.navigate(it.route)
+                            }
+                        )
+                    }
                     composable(Routes.TODO_LIST) {
                         TodoListScreen(
                             onNavigate = {
