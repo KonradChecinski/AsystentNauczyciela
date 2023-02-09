@@ -14,13 +14,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.asystentnauczyciela.ui.theme.AssistantAppTheme
 import com.example.asystentnauczyciela.ui.todo_list.TodoListViewModel
+import com.example.asystentnauczyciela.util.Routes
 import com.example.asystentnauczyciela.util.UiEvent
 
 @Composable
 fun StudentsListScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
-    viewModel: TodoListViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    classID: String,
+    modifier: Modifier = Modifier,
+    viewModel: TodoListViewModel = hiltViewModel()
 ) {
 
     Column(
@@ -29,11 +31,12 @@ fun StudentsListScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Widok uczniów w zajęciach")
+        Text(classID)
         Button(
             modifier = Modifier.padding(vertical = 24.dp),
-            onClick = {}
+            onClick = {onNavigate(UiEvent.Navigate(route = Routes.GRADE_LIST + "/${classID}" + "/ID_UCZNIA"))}
         ) {
-            Text("Continue")
+            Text("Widok ocen")
         }
     }
 }

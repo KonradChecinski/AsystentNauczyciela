@@ -17,8 +17,10 @@ import com.example.asystentnauczyciela.util.UiEvent
 @Composable
 fun GradesListScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
-    viewModel: TodoListViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    classID: String,
+    studentID: String,
+    modifier: Modifier = Modifier,
+    viewModel: TodoListViewModel = hiltViewModel()
 ) {
 
     Column(
@@ -27,6 +29,8 @@ fun GradesListScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Widok ocen dla ucznia w zajęciach")
+        Text(classID)
+        Text(studentID)
         Button(
             modifier = Modifier.padding(vertical = 24.dp),
             onClick = {}

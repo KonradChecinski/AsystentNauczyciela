@@ -26,30 +26,53 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
-                    startDestination = Routes.GRADE_LIST
+                    startDestination = Routes.CLASS_LIST
                 ) {
-                    composable(Routes.CLASS_LIST) {
+                    composable(route = Routes.CLASS_LIST) {
                         ClassesListScreen(
                             onNavigate = {
                                 navController.navigate(it.route)
                             }
                         )
                     }
-                    composable(Routes.STUDENT_LIST) {
+                    composable(
+                        route = Routes.STUDENT_LIST + "/{classID}",
+                        arguments = listOf(
+                            navArgument("classID") {
+                                type = NavType.StringType
+                                defaultValue = "ID ZAJĘĆ DOMYŚLNY"
+                            }
+                        )
+                    ) { entry ->
                         StudentsListScreen(
                             onNavigate = {
                                 navController.navigate(it.route)
-                            }
+                            },
+                            classID = entry.arguments?.getString("classID").toString()
                         )
                     }
-                    composable(Routes.GRADE_LIST) {
+                    composable(
+                        route = Routes.GRADE_LIST + "/{classID}" + "/{studentID}",
+                        arguments = listOf(
+                            navArgument("classID") {
+                                type = NavType.StringType
+                                defaultValue = "ID ZAJĘĆ DOMYŚLNY"
+                            },
+                            navArgument("studentID") {
+                                type = NavType.StringType
+                                defaultValue= "ID UCZNIA DOMYŚLNY"
+                            }
+                        )
+                    ) { entry ->
                         GradesListScreen(
                             onNavigate = {
                                 navController.navigate(it.route)
-                            }
+                            },
+                            classID = entry.arguments?.getString("classID").toString(),
+                            studentID = entry.arguments?.getString("studentID").toString()
                         )
                     }
-                    composable(Routes.TODO_LIST) {
+                    composable(route = Routes.TODO_LIST) {
                         TodoListScreen(
                             onNavigate = {
                                 navController.navigate(it.route)

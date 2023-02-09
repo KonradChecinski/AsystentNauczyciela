@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.asystentnauczyciela.ui.theme.AssistantAppTheme
 import com.example.asystentnauczyciela.ui.todo_list.TodoListViewModel
+import com.example.asystentnauczyciela.util.Routes
 import com.example.asystentnauczyciela.util.UiEvent
 
 @Composable
@@ -31,9 +32,9 @@ fun ClassesListScreen(
         Text("Widok zajęć")
         Button(
             modifier = Modifier.padding(vertical = 24.dp),
-            onClick = {}
+            onClick = {onNavigate(UiEvent.Navigate(route = Routes.STUDENT_LIST + "/ID_ZAJĘĆ"))}
         ) {
-            Text("Continue")
+            Text("Widok uczniów")
         }
     }
 }
