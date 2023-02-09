@@ -9,7 +9,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.asystentnauczyciela.ui.add_edit_todo.AddEditTodoScreen
-import com.example.asystentnauczyciela.ui.theme.MVVMTodoAppTheme
+import com.example.asystentnauczyciela.ui.classes_view.ClassesListScreen
+import com.example.asystentnauczyciela.ui.grades_view.GradesListScreen
+import com.example.asystentnauczyciela.ui.students_view.StudentsListScreen
+import com.example.asystentnauczyciela.ui.theme.AssistantAppTheme
 import com.example.asystentnauczyciela.ui.todo_list.TodoListScreen
 import com.example.asystentnauczyciela.util.Routes
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,15 +22,28 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MVVMTodoAppTheme {
+            AssistantAppTheme {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
-                    startDestination = Routes.CLASS_LIST
+                    startDestination = Routes.GRADE_LIST
                 ) {
                     composable(Routes.CLASS_LIST) {
-                        // Do zmiany jak dodasz widok :)
-                        TodoListScreen(
+                        ClassesListScreen(
+                            onNavigate = {
+                                navController.navigate(it.route)
+                            }
+                        )
+                    }
+                    composable(Routes.STUDENT_LIST) {
+                        StudentsListScreen(
+                            onNavigate = {
+                                navController.navigate(it.route)
+                            }
+                        )
+                    }
+                    composable(Routes.GRADE_LIST) {
+                        GradesListScreen(
                             onNavigate = {
                                 navController.navigate(it.route)
                             }
