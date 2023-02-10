@@ -19,7 +19,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.MVVMTodoApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.asystentNauczyciela.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.MVVMTodoApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.asystentNauczyciela.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
