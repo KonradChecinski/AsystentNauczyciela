@@ -1,21 +1,22 @@
-package com.example.asystentnauczyciela.ui.add_edit_todo
+package com.example.asystentnauczyciela.ui.add_edit_student
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.asystentnauczyciela.R
 import com.example.asystentnauczyciela.util.UiEvent
 import kotlinx.coroutines.flow.collect
 
 @Composable
-fun AddEditTodoScreen(
+fun AddEditStudentScreen(
     onPopBackStack: () -> Unit,
-    viewModel: AddEditTodoViewModel = hiltViewModel()
+    viewModel: AddEditStudentViewModel = hiltViewModel()
 ) {
     val scaffoldState = rememberScaffoldState()
     LaunchedEffect(key1 = true) {
@@ -38,11 +39,13 @@ fun AddEditTodoScreen(
             .fillMaxSize()
             .padding(16.dp),
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                viewModel.onEvent(AddEditTodoEvent.OnSaveStudentClick)
+            FloatingActionButton(
+                backgroundColor = MaterialTheme.colors.primary,
+                onClick = {
+                viewModel.onEvent(AddEditStudentEvent.OnSaveStudentClick)
             }) {
                 Icon(
-                    imageVector = Icons.Default.Check,
+                    imageVector = ImageVector.vectorResource(id = R.drawable.save),
                     contentDescription = "Save"
                 )
             }
@@ -52,23 +55,36 @@ fun AddEditTodoScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             TextField(
-                value = viewModel.title,
+                value = viewModel.name,
                 onValueChange = {
-                    viewModel.onEvent(AddEditTodoEvent.OnTitleChange(it))
+                    viewModel.onEvent(AddEditStudentEvent.OnNameChange(it))
                 },
                 placeholder = {
-                    Text(text = "Title")
+                    Text(text = "Imię")
                 },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
             TextField(
-                value = viewModel.description,
+                value = viewModel.lastname,
                 onValueChange = {
-                    viewModel.onEvent(AddEditTodoEvent.OnDescriptionChange(it))
+                    viewModel.onEvent(AddEditStudentEvent.OnLastnameChange(it))
                 },
                 placeholder = {
-                    Text(text = "Description")
+                    Text(text = "Nazwisko")
+                },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = false,
+                maxLines = 5
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            TextField(
+                value = viewModel.albumNumber,
+                onValueChange = {
+                    viewModel.onEvent(AddEditStudentEvent.OnAlbumNumberChange(it))
+                },
+                placeholder = {
+                    Text(text = "Numer albumu")
                 },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = false,

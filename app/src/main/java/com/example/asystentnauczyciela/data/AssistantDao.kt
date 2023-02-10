@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface AssistantDao {
 
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addStudent(student: Student)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -3,16 +3,18 @@ package com.example.asystentnauczyciela
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Scaffold
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.asystentnauczyciela.ui.add_edit_student.AddEditStudentScreen
 import com.example.asystentnauczyciela.ui.add_edit_todo.AddEditTodoScreen
 import com.example.asystentnauczyciela.ui.classes_view.ClassesListScreen
 import com.example.asystentnauczyciela.ui.drawer_menu.AppBar
@@ -47,106 +49,151 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     },
+//                    backgroundColor = Color(R.color.transparent),
                     drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
                     drawerContent = {
                         DrawerHeader()
-
                         DrawerBody(
                             items = listOf(
                                 MenuItem(
-                                    id = "home",
-                                    title = "Home",
-                                    contentDescription = "Go to home screen",
-                                    icon = Icons.Default.Home
+                                    id = "zajecia",
+                                    title = "Zajęcia",
+                                    contentDescription = "Pokaż widok zajęć",
+                                    icon = ImageVector.vectorResource(id = R.drawable.school),
+                                    route = Routes.CLASS_LIST
                                 ),
                                 MenuItem(
-                                    id = "settings",
-                                    title = "Settings",
-                                    contentDescription = "Go to settings screen",
-                                    icon = Icons.Default.Settings
-                                ),
-                                MenuItem(
-                                    id = "help",
-                                    title = "Help",
-                                    contentDescription = "Get help",
-                                    icon = Icons.Default.Info
+                                    id = "studenci",
+                                    title = "Studenci",
+                                    contentDescription = "Pokaż widok studenta",
+                                    icon = ImageVector.vectorResource(id = R.drawable.group),
+                                    route = Routes.STUDENT_LIST
                                 ),
                             ),
                             onItemClick = {
-                                println("Clicked on ${it.title}")
-                            }
-                        )
-                    }
-                ) {
+//                                when(it.route){
+//                                    Routes.CLASS_LIST -> navController.navigate(it.route)
+//                                    Routes.STUDENT_LIST -> navController.navigate(it.route + "/aloha")
+//                                }
+                               navController.navigate(it.route)
+                                scope.launch {
+                                    scaffoldState.drawerState.close()
+                                }
 
-                }
-                NavHost(
-                    navController = navController,
-                    startDestination = Routes.CLASS_LIST
+                            }
+                        )
+                    }
                 ) {
-                    composable(route = Routes.CLASS_LIST) {
-                        ClassesListScreen(
-                            onNavigate = {
-                                navController.navigate(it.route)
+                    Box {
+//                        AppBar(
+//                            onNavigationIconClick = {
+//                                scope.launch {
+//                                    scaffoldState.drawerState.open()
+//                                }
+//                            }
+//                        )
+
+                        NavHost(
+                            navController = navController,
+                            startDestination = Routes.CLASS_LIST,
+
+                        ) {
+//                            WIDOK PRZEDMIOTÓW
+                            composable(route = Routes.CLASS_LIST) {
+                                ClassesListScreen(
+                                    onNavigate = {
+                                        navController.navigate(it.route)
+                                    }
+                                )
                             }
-                        )
-                    }
-                    composable(
-                        route = Routes.STUDENT_LIST + "/{classID}",
-                        arguments = listOf(
-                            navArgument("classID") {
-                                type = NavType.StringType
-                                defaultValue = "ID ZAJĘĆ DOMYŚLNY"
+
+
+//                            WIDOK STUDENTOW na zajecich
+                            composable(
+                                route = Routes.STUDENT_LIST + "?classID={classID}",
+                                arguments = listOf(
+                                    navArgument("classID") {
+                                        type = NavType.StringType
+//                                        defaultValue = "ID ZAJĘĆ DOMYŚLNY"
+                                        nullable = true
+                                    }
+                                )
+                            ) { entry ->
+                                StudentsListScreen(
+                                    onNavigate = {
+                                        navController.navigate(it.route)
+                                    },
+                                    classID = entry.arguments?.getString("classID")
+                                )
                             }
-                        )
-                    ) { entry ->
-                        StudentsListScreen(
-                            onNavigate = {
-                                navController.navigate(it.route)
-                            },
-                            classID = entry.arguments?.getString("classID").toString()
-                        )
-                    }
-                    composable(
-                        route = Routes.GRADE_LIST + "/{classID}" + "/{studentID}",
-                        arguments = listOf(
-                            navArgument("classID") {
-                                type = NavType.StringType
-                                defaultValue = "ID ZAJĘĆ DOMYŚLNY"
-                            },
-                            navArgument("studentID") {
-                                type = NavType.StringType
-                                defaultValue= "ID UCZNIA DOMYŚLNY"
+
+
+//                            WIDOK edycji-dodawania studentow
+                            composable(
+                                route = Routes.STUDENT_ADD_EDIT + "?studentId={studentId}",
+                                arguments = listOf(
+                                    navArgument(name = "studentId") {
+                                        type = NavType.IntType
+                                        defaultValue = -1
+                                    }
+                                )
+                            ) {
+                                AddEditStudentScreen(onPopBackStack = {
+                                    navController.popBackStack()
+                                })
                             }
-                        )
-                    ) { entry ->
-                        GradesListScreen(
-                            onNavigate = {
-                                navController.navigate(it.route)
-                            },
-                            classID = entry.arguments?.getString("classID").toString(),
-                            studentID = entry.arguments?.getString("studentID").toString()
-                        )
-                    }
-                    composable(route = Routes.TODO_LIST) {
-                        TodoListScreen(
-                            onNavigate = {
-                                navController.navigate(it.route)
+
+
+
+
+                            composable(
+                                route = Routes.GRADE_LIST + "/{classID}" + "/{studentID}",
+                                arguments = listOf(
+                                    navArgument("classID") {
+                                        type = NavType.StringType
+                                        defaultValue = "ID ZAJĘĆ DOMYŚLNY"
+                                    },
+                                    navArgument("studentID") {
+                                        type = NavType.StringType
+                                        defaultValue = "ID UCZNIA DOMYŚLNY"
+                                    }
+                                )
+                            ) { entry ->
+                                GradesListScreen(
+                                    onNavigate = {
+                                        navController.navigate(it.route)
+                                    },
+                                    classID = entry.arguments?.getString("classID").toString(),
+                                    studentID = entry.arguments?.getString("studentID").toString()
+                                )
                             }
-                        )
-                    }
-                    composable(
-                        route = Routes.ADD_EDIT_TODO + "?todoId={todoId}",
-                        arguments = listOf(
-                            navArgument(name = "todoId") {
-                                type = NavType.IntType
-                                defaultValue = -1
+                            composable(route = Routes.TODO_LIST) {
+                                TodoListScreen(
+                                    onNavigate = {
+                                        navController.navigate(it.route)
+                                    }
+                                )
                             }
-                        )
-                    ) {
-                        AddEditTodoScreen(onPopBackStack = {
-                            navController.popBackStack()
-                        })
+                            composable(
+                                route = Routes.ADD_EDIT_TODO + "?todoId={todoId}",
+                                arguments = listOf(
+                                    navArgument(name = "todoId") {
+                                        type = NavType.IntType
+                                        defaultValue = -1
+                                    }
+                                )
+                            ) {
+                                AddEditTodoScreen(onPopBackStack = {
+                                    navController.popBackStack()
+                                })
+                            }
+                        }
+
+
+
+
+
+
                     }
                 }
             }
