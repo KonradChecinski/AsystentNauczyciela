@@ -93,7 +93,8 @@ class AddEditCourseViewModel @Inject constructor(
                         Course(
                             courseName = courseName,
                             weekDay = weekDay.toInt(),
-                            timeBlock = timeBlock
+                            timeBlock = timeBlock,
+                            courseId = course?.courseId
                         )
                     )
                     sendUiEvent(UiEvent.PopBackStack)
