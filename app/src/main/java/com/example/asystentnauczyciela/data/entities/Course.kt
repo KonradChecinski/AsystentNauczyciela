@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Course(
-    @PrimaryKey val classId: Int? = null,
-    val className: String,
+    @PrimaryKey val courseId: Int? = null,
+    val courseName: String,
     val weekDay: Int,
     val timeBlock: String
 )

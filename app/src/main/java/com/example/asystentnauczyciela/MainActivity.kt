@@ -16,7 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.asystentnauczyciela.ui.add_edit_student.AddEditStudentScreen
 import com.example.asystentnauczyciela.ui.add_edit_todo.AddEditTodoScreen
-import com.example.asystentnauczyciela.ui.classes_view.ClassesListScreen
+import com.example.asystentnauczyciela.ui.courses_view.CoursesListScreen
 import com.example.asystentnauczyciela.ui.drawer_menu.AppBar
 import com.example.asystentnauczyciela.ui.drawer_menu.DrawerBody
 import com.example.asystentnauczyciela.ui.drawer_menu.DrawerHeader
@@ -60,75 +60,66 @@ class MainActivity : ComponentActivity() {
                                     title = "Zajęcia",
                                     contentDescription = "Pokaż widok zajęć",
                                     icon = ImageVector.vectorResource(id = R.drawable.school),
-                                    route = Routes.CLASS_LIST
+                                    route = Routes.COURSES_LIST
                                 ),
                                 MenuItem(
                                     id = "studenci",
                                     title = "Studenci",
                                     contentDescription = "Pokaż widok studenta",
                                     icon = ImageVector.vectorResource(id = R.drawable.group),
-                                    route = Routes.STUDENT_LIST
+                                    route = Routes.STUDENTS_LIST
                                 ),
                             ),
                             onItemClick = {
-//                                when(it.route){
-//                                    Routes.CLASS_LIST -> navController.navigate(it.route)
-//                                    Routes.STUDENT_LIST -> navController.navigate(it.route + "/aloha")
-//                                }
                                navController.navigate(it.route)
                                 scope.launch {
                                     scaffoldState.drawerState.close()
                                 }
-
                             }
                         )
                     }
                 ) {
                     Box {
-//                        AppBar(
-//                            onNavigationIconClick = {
-//                                scope.launch {
-//                                    scaffoldState.drawerState.open()
-//                                }
-//                            }
-//                        )
-
                         NavHost(
                             navController = navController,
-                            startDestination = Routes.CLASS_LIST,
-
-                        ) {
-//                            WIDOK PRZEDMIOTÓW
-                            composable(route = Routes.CLASS_LIST) {
-                                ClassesListScreen(
-                                    onNavigate = {
-                                        navController.navigate(it.route)
-                                    }
-                                )
-                            }
+                            startDestination = Routes.COURSES_LIST,
+                            ) {
 
 
-//                            WIDOK STUDENTOW na zajecich
-                            composable(
-                                route = Routes.STUDENT_LIST + "?classID={classID}",
-                                arguments = listOf(
-                                    navArgument("classID") {
-                                        type = NavType.StringType
-//                                        defaultValue = "ID ZAJĘĆ DOMYŚLNY"
-                                        nullable = true
-                                    }
-                                )
-                            ) { entry ->
+                            //region Student
+
+                            //region Studenci lista wszystkich
+
+                            composable(route = Routes.STUDENTS_LIST) {
                                 StudentsListScreen(
                                     onNavigate = {
                                         navController.navigate(it.route)
-                                    },
-                                    classID = entry.arguments?.getString("classID")
+                                    }
                                 )
                             }
+                        //endregion
 
+                            //region Studenci na zajęciach
+//                            composable(
+//                                route = Routes.STUDENT_LIST + "?classID={classID}",
+//                                arguments = listOf(
+//                                    navArgument("classID") {
+//                                        type = NavType.StringType
+////                                        defaultValue = "ID ZAJĘĆ DOMYŚLNY"
+//                                        nullable = true
+//                                    }
+//                                )
+//                            ) { entry ->
+//                                StudentsListScreen(
+//                                    onNavigate = {
+//                                        navController.navigate(it.route)
+//                                    },
+//                                    classID = entry.arguments?.getString("classID")
+//                                )
+//                            }
+                            //endregion
 
-//                            WIDOK edycji-dodawania studentow
+                            //region Widok Edycji/Dodawania Studentow
                             composable(
                                 route = Routes.STUDENT_ADD_EDIT + "?studentId={studentId}",
                                 arguments = listOf(
@@ -142,10 +133,13 @@ class MainActivity : ComponentActivity() {
                                     navController.popBackStack()
                                 })
                             }
+                            //endregion
 
+                            //endregion
 
+                            //region Grade
 
-
+                            //region Widok ocen Studenta na zajęciach
                             composable(
                                 route = Routes.GRADE_LIST + "/{classID}" + "/{studentID}",
                                 arguments = listOf(
@@ -167,6 +161,28 @@ class MainActivity : ComponentActivity() {
                                     studentID = entry.arguments?.getString("studentID").toString()
                                 )
                             }
+                            //endregion
+
+                            //endregion
+
+                            //region Course
+
+                            //region widok wszystkich przemiotow
+                            composable(route = Routes.COURSES_LIST) {
+                                CoursesListScreen(
+                                    onNavigate = {
+                                        navController.navigate(it.route)
+                                    }
+                                )
+                            }
+
+                            //endregion
+
+                            //endregion
+
+
+                            //region todo
+
                             composable(route = Routes.TODO_LIST) {
                                 TodoListScreen(
                                     onNavigate = {
@@ -187,13 +203,9 @@ class MainActivity : ComponentActivity() {
                                     navController.popBackStack()
                                 })
                             }
+
+                            //endregion
                         }
-
-
-
-
-
-
                     }
                 }
             }
