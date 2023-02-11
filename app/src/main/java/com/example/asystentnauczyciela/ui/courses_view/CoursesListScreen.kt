@@ -73,7 +73,7 @@ fun CoursesListScreen(
             modifier = modifier.fillMaxSize(),
         ) {
             Text(
-                text = "Przedmioty",
+                text = "Zajęcia",
                 modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 10.dp),
                 textAlign = TextAlign.Center,
                 fontSize = 40.sp

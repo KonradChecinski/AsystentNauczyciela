@@ -16,7 +16,9 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.asystentnauczyciela.R
 import com.example.asystentnauczyciela.util.UiEvent
@@ -26,7 +28,8 @@ import kotlinx.coroutines.flow.collect
 @Composable
 fun AddEditStudentScreen(
     onPopBackStack: () -> Unit,
-    viewModel: AddEditStudentViewModel = hiltViewModel()
+    viewModel: AddEditStudentViewModel = hiltViewModel(),
+    studentId: Int
 ) {
     val scaffoldState = rememberScaffoldState()
     val focusManager = LocalFocusManager.current
@@ -67,6 +70,12 @@ fun AddEditStudentScreen(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
+            Text(
+                text = if (studentId == -1) "Dodaj studenta" else "Edytuj studenta",
+                Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 10.dp),
+                textAlign = TextAlign.Center,
+                fontSize = 40.sp
+            )
             TextField(
                 value = viewModel.name,
                 onValueChange = {

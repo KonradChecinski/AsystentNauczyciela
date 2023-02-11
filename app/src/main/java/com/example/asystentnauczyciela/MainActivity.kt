@@ -128,10 +128,13 @@ class MainActivity : ComponentActivity() {
                                         defaultValue = -1
                                     }
                                 )
-                            ) {
-                                AddEditStudentScreen(onPopBackStack = {
-                                    navController.popBackStack()
-                                })
+                            ) {entry ->
+                                AddEditStudentScreen(
+                                    onPopBackStack = {
+                                        navController.popBackStack()
+                                    },
+                                    studentId = entry.arguments!!.getInt("studentId")
+                                )
                             }
                             //endregion
 
