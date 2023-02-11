@@ -1,6 +1,7 @@
 package com.example.asystentnauczyciela.data
 
 import androidx.room.*
+import com.example.asystentnauczyciela.data.entities.Course
 import com.example.asystentnauczyciela.data.entities.Grade
 import com.example.asystentnauczyciela.data.entities.Student
 import com.example.asystentnauczyciela.data.relations.StudentWithGrades
@@ -9,12 +10,12 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AssistantDao {
 
-
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun addStudent(student: Student)
+    //region Student
+    @Query("SELECT * FROM Student")
+    fun getStudents(): Flow<List<Student>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addGrade(grade: Grade)
+    suspend fun addStudent(student: Student)
 
     @Delete
     suspend fun deleteStudent(student: Student)
@@ -22,12 +23,31 @@ interface AssistantDao {
     @Query("SELECT * FROM Student WHERE studentId = :studentId")
     suspend fun getStudentById(studentId: Int): Student?
 
-    @Query("SELECT * FROM Student")
-    fun getStudents(): Flow<List<Student>>
-
     @Transaction
     @Query("SELECT * FROM Student WHERE studentId = :studentId")
     suspend fun getStudentWithGrades(studentId: Int): List<StudentWithGrades>
+    //endregion
+
+
+    //region Grade
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addGrade(grade: Grade)
+
+    //endregion
+
+
+    //region Course
+    @Query("SELECT * FROM Course")
+    fun getCourses(): Flow<List<Course>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addCourse(course: Course)
+
+    @Delete
+    suspend fun deleteCourse(course: Course)
+
+    //endregion
+
 
 //    @Transaction
 //    @Query("SELECT * FROM Student JOIN Grade ON (Student.studentId=Grade.studentId AND classId = :classId) WHERE studentId = :studentId")

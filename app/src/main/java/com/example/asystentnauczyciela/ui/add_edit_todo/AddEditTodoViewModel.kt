@@ -54,7 +54,7 @@ class AddEditTodoViewModel @Inject constructor(
             is AddEditTodoEvent.OnDescriptionChange -> {
                 description = event.description
             }
-            is AddEditTodoEvent.OnSaveTodoClick -> {
+            is AddEditTodoEvent.OnSaveStudentClick -> {
                 viewModelScope.launch {
                     if(title.isBlank()) {
                         sendUiEvent(UiEvent.ShowSnackbar(

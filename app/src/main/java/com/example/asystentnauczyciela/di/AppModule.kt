@@ -22,7 +22,9 @@ object AppModule {
             app,
             AssistantDatabase::class.java,
             "todo_db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides

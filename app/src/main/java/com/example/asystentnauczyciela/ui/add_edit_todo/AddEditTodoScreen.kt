@@ -39,7 +39,7 @@ fun AddEditTodoScreen(
             .padding(16.dp),
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                viewModel.onEvent(AddEditTodoEvent.OnSaveTodoClick)
+                viewModel.onEvent(AddEditTodoEvent.OnSaveStudentClick)
             }) {
                 Icon(
                     imageVector = Icons.Default.Check,

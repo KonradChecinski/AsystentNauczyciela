@@ -1,4 +1,4 @@
-package com.example.asystentnauczyciela.ui.students_view
+package com.example.asystentnauczyciela.ui.courses_view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -25,12 +25,12 @@ import com.example.asystentnauczyciela.util.UiEvent
 import kotlinx.coroutines.flow.collect
 
 @Composable
-fun StudentsListScreen(
+fun CoursesListScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: StudentsListViewModel = hiltViewModel()
+    viewModel: CoursesListViewModel = hiltViewModel()
 ) {
-    val students = viewModel.students.collectAsState(initial = emptyList())
+    val classes = viewModel.courses.collectAsState(initial = emptyList())
     val scaffoldState = rememberScaffoldState()
 
     LaunchedEffect(key1 = true) {
@@ -42,7 +42,7 @@ fun StudentsListScreen(
                         actionLabel = event.action
                     )
                     if(result == SnackbarResult.ActionPerformed) {
-                        viewModel.onEvent(StudentsListEvent.OnUndoDeleteClick)
+                        viewModel.onEvent(CoursesListEvent.OnUndoDeleteClick)
                     }
                 }
                 is UiEvent.Navigate -> onNavigate(event)
@@ -73,7 +73,7 @@ fun StudentsListScreen(
             modifier = modifier.fillMaxSize(),
         ) {
             Text(
-                text = "Studenci",
+                text = "Przedmioty",
                 modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 10.dp),
                 textAlign = TextAlign.Center,
                 fontSize = 40.sp
@@ -81,13 +81,13 @@ fun StudentsListScreen(
             LazyColumn(
                 modifier.fillMaxSize()
             ) {
-                items(items = students.value){
+                items(items = classes.value){
                     Card(
                         modifier = modifier
                             .fillMaxWidth()
                             .padding(5.dp)
                             .clickable {
-                                viewModel.onEvent(StudentsListEvent.OnStudentClick(it))
+                                viewModel.onEvent(CoursesListEvent.OnCourseClick(it))
                             },
                         elevation = 3.dp,
                         shape = RoundedCornerShape(10.dp),
@@ -105,8 +105,8 @@ fun StudentsListScreen(
                                 modifier = modifier.fillMaxHeight().width(240.dp),
                                 verticalArrangement = Arrangement.Center,
                             ) {
-                                Text(text = it.name + " " + it.lastName, modifier.padding(1.dp, 15.dp, 0.dp, 1.dp))
-                                Text(text = "Numer albumu: " + it.albumNumber, modifier.padding(1.dp,0.dp, 5.dp, 5.dp))
+                                Text(text = it.courseName, modifier.padding(1.dp, 15.dp, 0.dp, 1.dp))
+                                Text(text = it.weekDay.toString() + " " + it.timeBlock, modifier.padding(1.dp,0.dp, 5.dp, 5.dp))
                             }
 
                             Icon(
@@ -115,28 +115,13 @@ fun StudentsListScreen(
                                 modifier = Modifier
                                     .width(30.dp).height(30.dp).padding(0.dp, 10.dp, 0.dp, 0.dp)
                                     .clickable{
-                                        viewModel.onEvent(StudentsListEvent.OnDeleteStudentClick(it))
+                                        viewModel.onEvent(CoursesListEvent.OnDeleteCourseClick(it))
                                     },
                             )
-
-
                         }
-
                     }
-
                 }
             }
-//            Text(classID ?: "NUllable")
-//            Button(
-//                modifier = Modifier.padding(vertical = 24.dp),
-//                onClick = {onNavigate(UiEvent.Navigate(route = Routes.STUDENT_ADD_EDIT))}
-//            ) {
-//                Icon(
-//                                imageVector = ImageVector.vectorResource(id = R.drawable.person48),
-//                                contentDescription = "Zapisz",
-//                                modifier.padding(20.dp),
-//                            )
-//            }
         }
     }
 
