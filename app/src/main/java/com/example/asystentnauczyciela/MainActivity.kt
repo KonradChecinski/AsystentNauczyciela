@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.asystentnauczyciela.ui.add_edit_course.AddEditCourseScreen
 import com.example.asystentnauczyciela.ui.add_edit_student.AddEditStudentScreen
 import com.example.asystentnauczyciela.ui.add_edit_todo.AddEditTodoScreen
 import com.example.asystentnauczyciela.ui.courses_view.CoursesListScreen
@@ -180,6 +181,24 @@ class MainActivity : ComponentActivity() {
                             }
 
                             //endregion
+
+                            //region Widok edycji / dodawnia przedmiotów
+                            composable(
+                                route = Routes.COURSE_ADD_EDIT + "?courseId={courseId}",
+                                arguments = listOf(
+                                    navArgument(name = "courseId") {
+                                        type = NavType.IntType
+                                        defaultValue = -1
+                                    }
+                                )
+                            ) {entry ->
+                                AddEditCourseScreen(
+                                    onPopBackStack = {
+                                        navController.popBackStack()
+                                    },
+                                    courseId = entry.arguments!!.getInt("courseId")
+                                )
+                            }
 
                             //endregion
 

@@ -26,6 +26,8 @@ interface AssistantRepository {
 
     fun getCourses(): Flow<List<Course>>
 
+    suspend fun getCourseById(courseId: Int): Course?
+
     suspend fun addCourse(course: Course)
 
     suspend fun deleteCourse(course: Course)

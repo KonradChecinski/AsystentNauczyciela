@@ -64,7 +64,7 @@ fun StudentsListScreen(
                 }) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Save"
+                    contentDescription = "Add student"
                 )
             }
         }

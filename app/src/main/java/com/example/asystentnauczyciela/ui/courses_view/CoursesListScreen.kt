@@ -60,11 +60,11 @@ fun CoursesListScreen(
             FloatingActionButton(
                 backgroundColor = MaterialTheme.colors.primary,
                 onClick = {
-                    onNavigate(UiEvent.Navigate(route = Routes.STUDENT_ADD_EDIT))
+                    onNavigate(UiEvent.Navigate(route = Routes.COURSE_ADD_EDIT))
                 }) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Save"
+                    contentDescription = "Add course"
                 )
             }
         }
@@ -73,7 +73,7 @@ fun CoursesListScreen(
             modifier = modifier.fillMaxSize(),
         ) {
             Text(
-                text = "Zajęcia",
+                text = "Przedmioty",
                 modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 10.dp),
                 textAlign = TextAlign.Center,
                 fontSize = 40.sp
@@ -97,7 +97,7 @@ fun CoursesListScreen(
                                 .fillMaxSize(),
                         ) {
                             Icon(
-                                imageVector = ImageVector.vectorResource(id = R.drawable.person48),
+                                imageVector = ImageVector.vectorResource(id = R.drawable.school),
                                 contentDescription = "Zapisz",
                                 modifier.padding(20.dp),
                             )

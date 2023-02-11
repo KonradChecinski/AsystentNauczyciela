@@ -41,6 +41,10 @@ class AssistantRepositoryImpl(
         return dao.getCourses()
     }
 
+    override suspend fun getCourseById(courseId: Int): Course? {
+        return dao.getCourseById(courseId)
+    }
+
     override suspend fun addCourse(course: Course) {
         return dao.addCourse(course)
     }
