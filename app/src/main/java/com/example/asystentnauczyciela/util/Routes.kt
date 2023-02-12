@@ -14,5 +14,6 @@ object Routes {
     //Course
     const val COURSES_LIST = "courses_view"
     const val COURSE_ADD_EDIT = "course_add_edit"
+    const val COURSE_STUDENT_LIST = "course_add_edit"
 
 }

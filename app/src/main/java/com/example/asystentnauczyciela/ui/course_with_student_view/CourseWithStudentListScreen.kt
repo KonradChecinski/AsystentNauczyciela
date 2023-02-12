@@ -1,4 +1,4 @@
-package com.example.asystentnauczyciela.ui.students_view
+package com.example.asystentnauczyciela.ui.course_with_student_view
 
 import android.graphics.Color
 import androidx.compose.foundation.background
@@ -34,15 +34,20 @@ import com.example.asystentnauczyciela.util.UiEvent
 import kotlinx.coroutines.flow.collect
 
 @Composable
-fun StudentsListScreen(
+fun CourseWithStudentListScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: StudentsListViewModel = hiltViewModel()
+    courseId: Int,
+    viewModel: CourseWithStudentListViewModel = hiltViewModel()
 ) {
+    viewModel.courseId = courseId
+
     val iconSize = 24.dp
     val offsetInPx = LocalDensity.current.run { (iconSize / 2).roundToPx() }
 
+    val course = viewModel.course.collectAsState(initial = emptyList())
     val students = viewModel.students.collectAsState(initial = emptyList())
+
     val scaffoldState = rememberScaffoldState()
 
     LaunchedEffect(key1 = true) {
@@ -54,7 +59,7 @@ fun StudentsListScreen(
                         actionLabel = event.action
                     )
                     if(result == SnackbarResult.ActionPerformed) {
-                        viewModel.onEvent(StudentsListEvent.OnUndoDeleteClick)
+                        viewModel.onEvent(CourseWithStudentListEvent.OnUndoDeleteClick)
                     }
                 }
                 is UiEvent.Navigate -> onNavigate(event)
@@ -85,8 +90,10 @@ fun StudentsListScreen(
             modifier = modifier.fillMaxSize(),
         ) {
             Text(
-                text = "Studenci",
-                modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 10.dp),
+                text = course.value[0].courseName,
+                modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 0.dp, 0.dp, 10.dp),
                 textAlign = TextAlign.Center,
                 fontSize = 40.sp
             )
@@ -100,7 +107,7 @@ fun StudentsListScreen(
                                 .fillMaxWidth()
                                 .padding(5.dp)
                                 .clickable {
-                                    viewModel.onEvent(StudentsListEvent.OnStudentClick(it))
+                                    viewModel.onEvent(CourseWithStudentListEvent.OnStudentClick(it))
                                 },
                             elevation = 3.dp,
                             shape = RoundedCornerShape(10.dp),
@@ -125,7 +132,7 @@ fun StudentsListScreen(
                             }
                         }
                         IconButton(
-                            onClick = {viewModel.onEvent(StudentsListEvent.OnDeleteStudentClick(it))},
+                            onClick = {viewModel.onEvent(CourseWithStudentListEvent.OnDeleteStudentClick(it))},
                             modifier = Modifier
                                 .offset {
                                     IntOffset(x = -offsetInPx, y = +offsetInPx)

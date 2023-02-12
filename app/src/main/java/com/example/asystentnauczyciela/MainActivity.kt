@@ -16,16 +16,14 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.asystentnauczyciela.ui.add_edit_course.AddEditCourseScreen
 import com.example.asystentnauczyciela.ui.add_edit_student.AddEditStudentScreen
-import com.example.asystentnauczyciela.ui.add_edit_todo.AddEditTodoScreen
+import com.example.asystentnauczyciela.ui.course_with_student_view.CourseWithStudentListScreen
 import com.example.asystentnauczyciela.ui.courses_view.CoursesListScreen
 import com.example.asystentnauczyciela.ui.drawer_menu.AppBar
 import com.example.asystentnauczyciela.ui.drawer_menu.DrawerBody
 import com.example.asystentnauczyciela.ui.drawer_menu.DrawerHeader
 import com.example.asystentnauczyciela.ui.drawer_menu.MenuItem
-import com.example.asystentnauczyciela.ui.grades_view.GradesListScreen
 import com.example.asystentnauczyciela.ui.students_view.StudentsListScreen
 import com.example.asystentnauczyciela.ui.theme.AssistantAppTheme
-import com.example.asystentnauczyciela.ui.todo_list.TodoListScreen
 import com.example.asystentnauczyciela.util.Routes
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -143,29 +141,29 @@ class MainActivity : ComponentActivity() {
 
                             //region Grade
 
-                            //region Widok ocen Studenta na zajęciach
-                            composable(
-                                route = Routes.GRADE_LIST + "/{classID}" + "/{studentID}",
-                                arguments = listOf(
-                                    navArgument("classID") {
-                                        type = NavType.StringType
-                                        defaultValue = "ID ZAJĘĆ DOMYŚLNY"
-                                    },
-                                    navArgument("studentID") {
-                                        type = NavType.StringType
-                                        defaultValue = "ID UCZNIA DOMYŚLNY"
-                                    }
-                                )
-                            ) { entry ->
-                                GradesListScreen(
-                                    onNavigate = {
-                                        navController.navigate(it.route)
-                                    },
-                                    classID = entry.arguments?.getString("classID").toString(),
-                                    studentID = entry.arguments?.getString("studentID").toString()
-                                )
-                            }
-                            //endregion
+//                            //region Widok ocen Studenta na zajęciach
+//                            composable(
+//                                route = Routes.GRADE_LIST + "/{classID}" + "/{studentID}",
+//                                arguments = listOf(
+//                                    navArgument("classID") {
+//                                        type = NavType.StringType
+//                                        defaultValue = "ID ZAJĘĆ DOMYŚLNY"
+//                                    },
+//                                    navArgument("studentID") {
+//                                        type = NavType.StringType
+//                                        defaultValue = "ID UCZNIA DOMYŚLNY"
+//                                    }
+//                                )
+//                            ) { entry ->
+//                                GradesListScreen(
+//                                    onNavigate = {
+//                                        navController.navigate(it.route)
+//                                    },
+//                                    classID = entry.arguments?.getString("classID").toString(),
+//                                    studentID = entry.arguments?.getString("studentID").toString()
+//                                )
+//                            }
+//                           //endregion
 
                             //endregion
 
@@ -202,31 +200,27 @@ class MainActivity : ComponentActivity() {
 
                             //endregion
 
-
-                            //region todo
-
-                            composable(route = Routes.TODO_LIST) {
-                                TodoListScreen(
+                            //region widok Jednego przedmiotu z stuidentami
+                            composable(
+                                route = Routes.COURSE_STUDENT_LIST + "/{courseId}",
+                                arguments = listOf(
+                                    navArgument(name = "courseId") {
+                                        type = NavType.IntType
+                                    }
+                                )
+                            ) {entry ->
+                                CourseWithStudentListScreen(
                                     onNavigate = {
                                         navController.navigate(it.route)
-                                    }
+                                    },
+                                    courseId = entry.arguments!!.getInt("courseId")
                                 )
-                            }
-                            composable(
-                                route = Routes.ADD_EDIT_TODO + "?todoId={todoId}",
-                                arguments = listOf(
-                                    navArgument(name = "todoId") {
-                                        type = NavType.IntType
-                                        defaultValue = -1
-                                    }
-                                )
-                            ) {
-                                AddEditTodoScreen(onPopBackStack = {
-                                    navController.popBackStack()
-                                })
                             }
 
                             //endregion
+
+                            //endregion
+
                         }
                     }
                 }

@@ -6,5 +6,6 @@ sealed class CoursesListEvent {
     data class OnDeleteCourseClick(val course: Course): CoursesListEvent()
     object OnUndoDeleteClick: CoursesListEvent()
     data class OnCourseClick(val course: Course): CoursesListEvent()
+    data class OnEditCourseClick(val course: Course): CoursesListEvent()
     object OnAddCourseClick: CoursesListEvent()
 }

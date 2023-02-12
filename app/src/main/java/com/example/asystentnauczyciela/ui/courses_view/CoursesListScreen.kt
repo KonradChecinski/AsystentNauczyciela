@@ -1,25 +1,36 @@
 package com.example.asystentnauczyciela.ui.courses_view
 
+import android.app.TimePickerDialog
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.asystentnauczyciela.R
+import com.example.asystentnauczyciela.ui.students_view.StudentsListEvent
 import com.example.asystentnauczyciela.util.Routes
 import com.example.asystentnauczyciela.util.UiEvent
 import kotlinx.coroutines.flow.collect
@@ -30,6 +41,9 @@ fun CoursesListScreen(
     modifier: Modifier = Modifier,
     viewModel: CoursesListViewModel = hiltViewModel()
 ) {
+    val iconSize = 24.dp
+    val offsetInPx = LocalDensity.current.run { (iconSize / 2).roundToPx() }
+
     val classes = viewModel.courses.collectAsState(initial = emptyList())
     val scaffoldState = rememberScaffoldState()
 
@@ -73,7 +87,7 @@ fun CoursesListScreen(
             modifier = modifier.fillMaxSize(),
         ) {
             Text(
-                text = "Przedmioty",
+                text = "Zajęcia",
                 modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 10.dp),
                 textAlign = TextAlign.Center,
                 fontSize = 40.sp
@@ -82,44 +96,74 @@ fun CoursesListScreen(
                 modifier.fillMaxSize()
             ) {
                 items(items = classes.value){
-                    Card(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(5.dp)
-                            .clickable {
-                                viewModel.onEvent(CoursesListEvent.OnCourseClick(it))
-                            },
-                        elevation = 3.dp,
-                        shape = RoundedCornerShape(10.dp),
-                    ) {
-                        Row(
+                    Box{
+                        Card(
                             modifier = modifier
-                                .fillMaxSize(),
+                                .fillMaxWidth()
+                                .padding(5.dp)
+                                .clickable {
+                                    viewModel.onEvent(CoursesListEvent.OnCourseClick(it))
+                                },
+                            elevation = 3.dp,
+                            shape = RoundedCornerShape(10.dp),
+                        ) {
+                            Row(
+                                modifier = modifier
+                                    .fillMaxSize(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = ImageVector.vectorResource(id = R.drawable.school48),
+                                    contentDescription = "Zapisz",
+                                    modifier.padding(20.dp),
+                                )
+                                Column(
+                                    modifier = modifier.fillMaxHeight().width(240.dp),
+                                    verticalArrangement = Arrangement.Center,
+                                ) {
+                                    Text(text = it.courseName, modifier.padding(1.dp, 0.dp, 0.dp, 1.dp))
+                                    Text(text = it.weekDay, modifier.padding(1.dp,0.dp, 5.dp, 0.dp))
+                                    Text(text = it.timeBlockFrom + " - " + it.timeBlockTo, modifier.padding(1.dp,0.dp, 5.dp, 0.dp))
+                                }
+
+                            }
+                        }
+
+                        IconButton(
+                            onClick = {viewModel.onEvent(CoursesListEvent.OnEditCourseClick(it))},
+                            modifier = Modifier
+                                .offset {
+                                    IntOffset(x = -offsetInPx, y = +offsetInPx)
+                                }
+                                .clip(CircleShape)
+                                .background(Color.White)
+                                .size(iconSize)
+                                .align(Alignment.TopEnd)
                         ) {
                             Icon(
-                                imageVector = ImageVector.vectorResource(id = R.drawable.school),
-                                contentDescription = "Zapisz",
-                                modifier.padding(20.dp),
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = "",
                             )
-                            Column(
-                                modifier = modifier.fillMaxHeight().width(240.dp),
-                                verticalArrangement = Arrangement.Center,
-                            ) {
-                                Text(text = it.courseName, modifier.padding(1.dp, 15.dp, 0.dp, 1.dp))
-                                Text(text = it.weekDay.toString() + " " + it.timeBlock, modifier.padding(1.dp,0.dp, 5.dp, 5.dp))
-                            }
+                        }
 
+                        IconButton(
+                            onClick = {viewModel.onEvent(CoursesListEvent.OnDeleteCourseClick(it))},
+                            modifier = Modifier
+                                .offset {
+                                    IntOffset(x = -offsetInPx, y = -offsetInPx)
+                                }
+                                .clip(CircleShape)
+                                .background(Color.White)
+                                .size(iconSize)
+                                .align(Alignment.BottomEnd)
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = "Usuń",
-                                modifier = Modifier
-                                    .width(30.dp).height(30.dp).padding(0.dp, 10.dp, 0.dp, 0.dp)
-                                    .clickable{
-                                        viewModel.onEvent(CoursesListEvent.OnDeleteCourseClick(it))
-                                    },
+                                contentDescription = "",
                             )
                         }
                     }
+
                 }
             }
         }

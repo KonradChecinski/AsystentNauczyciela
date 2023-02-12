@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class Course(
     @PrimaryKey val courseId: Int? = null,
     val courseName: String,
-    val weekDay: Int,
-    val timeBlock: String
+    val weekDay: String,
+    val timeBlockFrom: String,
+    val timeBlockTo: String
 )

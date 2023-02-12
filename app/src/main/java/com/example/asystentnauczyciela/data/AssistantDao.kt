@@ -41,7 +41,7 @@ interface AssistantDao {
     fun getCourses(): Flow<List<Course>>
 
     @Query("SELECT * FROM Course WHERE courseId = :courseId")
-    suspend fun getCourseById(courseId: Int): Course?
+    fun getCourseById(courseId: Int): Course?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addCourse(course: Course)

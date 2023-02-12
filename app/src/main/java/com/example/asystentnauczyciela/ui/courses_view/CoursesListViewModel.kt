@@ -27,6 +27,9 @@ class CoursesListViewModel @Inject constructor(
     fun onEvent(event: CoursesListEvent) {
         when(event) {
             is CoursesListEvent.OnCourseClick -> {
+                sendUiEvent(UiEvent.Navigate(Routes.COURSE_STUDENT_LIST + "/${event.course.courseId}"))
+            }
+            is CoursesListEvent.OnEditCourseClick -> {
                 sendUiEvent(UiEvent.Navigate(Routes.COURSE_ADD_EDIT + "?courseId=${event.course.courseId}"))
             }
             is CoursesListEvent.OnAddCourseClick -> {

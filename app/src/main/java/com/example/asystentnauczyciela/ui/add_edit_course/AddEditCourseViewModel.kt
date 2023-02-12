@@ -32,7 +32,10 @@ class AddEditCourseViewModel @Inject constructor(
     var weekDay by mutableStateOf("")
         private set
 
-    var timeBlock by mutableStateOf("")
+    var timeBlockFrom by mutableStateOf("")
+        private set
+
+    var timeBlockTo by mutableStateOf("")
         private set
 
     private val _uiEvent =  Channel<UiEvent>()
@@ -45,7 +48,8 @@ class AddEditCourseViewModel @Inject constructor(
                 repository.getCourseById(courseId)?.let { course ->
                     courseName = course.courseName
                     weekDay = course.weekDay.toString()
-                    timeBlock = course.timeBlock
+                    timeBlockFrom = course.timeBlockFrom
+                    timeBlockTo = course.timeBlockTo
                     this@AddEditCourseViewModel.course = course
                 }
             }
@@ -60,8 +64,11 @@ class AddEditCourseViewModel @Inject constructor(
             is AddEditCourseEvent.OnWeekDayChange -> {
                 weekDay = event.weekDay
             }
-            is AddEditCourseEvent.OnTimeBlockChange -> {
-                timeBlock = event.timeBlock
+            is AddEditCourseEvent.OnTimeFromBlockChange -> {
+                timeBlockFrom = event.timeBlockFrom
+            }
+            is AddEditCourseEvent.OnTimeToBlockChange -> {
+                timeBlockTo = event.timeBlockTo
             }
             is AddEditCourseEvent.OnSaveCourseClick -> {
                 viewModelScope.launch {
@@ -81,7 +88,15 @@ class AddEditCourseViewModel @Inject constructor(
                         )
                         return@launch
                     }
-                    if (timeBlock.isBlank()) {
+                    if (timeBlockFrom.isBlank()) {
+                        sendUiEvent(
+                            UiEvent.ShowSnackbar(
+                                message = "Przedział czasowy nie może być pusty"
+                            )
+                        )
+                        return@launch
+                    }
+                    if (timeBlockTo.isBlank()) {
                         sendUiEvent(
                             UiEvent.ShowSnackbar(
                                 message = "Przedział czasowy nie może być pusty"
@@ -92,8 +107,9 @@ class AddEditCourseViewModel @Inject constructor(
                     repository.addCourse(
                         Course(
                             courseName = courseName,
-                            weekDay = weekDay.toInt(),
-                            timeBlock = timeBlock,
+                            weekDay = weekDay,
+                            timeBlockFrom = timeBlockFrom,
+                            timeBlockTo = timeBlockTo,
                             courseId = course?.courseId
                         )
                     )
@@ -108,4 +124,5 @@ class AddEditCourseViewModel @Inject constructor(
             _uiEvent.send(event)
         }
     }
+
 }

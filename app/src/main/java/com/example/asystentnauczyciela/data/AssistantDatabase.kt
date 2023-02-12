@@ -8,7 +8,7 @@ import com.example.asystentnauczyciela.data.entities.Student
 
 @Database(
     entities = [Student::class, Grade::class, Course::class],
-    version = 2
+    version = 3
 )
 abstract class AssistantDatabase: RoomDatabase() {
 
