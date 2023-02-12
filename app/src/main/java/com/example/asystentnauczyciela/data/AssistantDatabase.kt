@@ -5,10 +5,12 @@ import androidx.room.RoomDatabase
 import com.example.asystentnauczyciela.data.entities.Course
 import com.example.asystentnauczyciela.data.entities.Grade
 import com.example.asystentnauczyciela.data.entities.Student
+import com.example.asystentnauczyciela.data.relations.CourseWithStudents
+import com.example.asystentnauczyciela.data.relations.StudentCourseCrossRef
 
 @Database(
-    entities = [Student::class, Grade::class, Course::class],
-    version = 3
+    entities = [Student::class, Grade::class, Course::class, StudentCourseCrossRef::class],
+    version = 5
 )
 abstract class AssistantDatabase: RoomDatabase() {
 

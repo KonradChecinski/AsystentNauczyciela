@@ -1,8 +1,13 @@
 package com.example.asystentnauczyciela.data
 
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.example.asystentnauczyciela.data.entities.Course
 import com.example.asystentnauczyciela.data.entities.Grade
 import com.example.asystentnauczyciela.data.entities.Student
+import com.example.asystentnauczyciela.data.relations.CourseWithStudents
+import com.example.asystentnauczyciela.data.relations.StudentWithCourses
 import com.example.asystentnauczyciela.data.relations.StudentWithGrades
 import kotlinx.coroutines.flow.Flow
 
@@ -26,12 +31,25 @@ interface AssistantRepository {
 
     fun getCourses(): Flow<List<Course>>
 
-    fun getCourseById(courseId: Int): Course?
+    suspend fun getCourseById(courseId: Int): Course?
+    fun getCourseByIdSync(courseId: Int): Flow<Course>
+
+    fun getStudentsInCourseById(courseId: Int): Flow<CourseWithStudents>
 
     suspend fun addCourse(course: Course)
 
     suspend fun deleteCourse(course: Course)
 
+    suspend fun deleteCourseWithStudents(courseId: Int, studentId: Int)
+
+    fun getStudentsWithCourse(): Flow<List<StudentWithCourses>>
+
+    fun getStudentsWithCourseSearch(text: String): Flow<List<StudentWithCourses>>
+
+
+    suspend fun addStudentWithCourse(courseId: Int, studentId: Int)
+
+    suspend fun deleteStudentWithCourse(courseId: Int, studentId: Int)
 
 //    suspend fun getStudentWithGradesInCourse(studentId: Int, classId: Int): List<StudentWithGrades>
 

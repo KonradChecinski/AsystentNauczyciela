@@ -15,10 +15,10 @@ fun DrawerHeader() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 64.dp),
+            .padding(10.dp, 30.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Asystent Nauczyciela", fontSize = 60.sp)
+        Text(text = "Asystent Nauczyciela", fontSize = 50.sp)
     }
 }
 

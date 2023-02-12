@@ -1,6 +1,7 @@
-package com.example.asystentnauczyciela.ui.course_with_student_view
+package com.example.asystentnauczyciela.ui.add_edit_course_with_student_view
 
 import android.graphics.Color
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,7 +14,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,97 +32,67 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.asystentnauczyciela.R
 import com.example.asystentnauczyciela.data.entities.Course
 import com.example.asystentnauczyciela.data.entities.Student
-import com.example.asystentnauczyciela.data.relations.CourseWithStudents
+import com.example.asystentnauczyciela.data.relations.StudentWithCourses
 import com.example.asystentnauczyciela.util.Routes
 import com.example.asystentnauczyciela.util.UiEvent
 import kotlinx.coroutines.flow.collect
 
 @Composable
-fun CourseWithStudentListScreen(
+fun AddEditCourseWithStudentScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
     modifier: Modifier = Modifier,
     courseId: Int,
-    viewModel: CourseWithStudentListViewModel = hiltViewModel()
+    viewModel: AddEditCourseWithStudentViewModel = hiltViewModel()
 ) {
-
     val iconSize = 24.dp
     val offsetInPx = LocalDensity.current.run { (iconSize / 2).roundToPx() }
 
-    val course = viewModel.course.collectAsState(initial = CourseWithStudents(
-        Course(0,"","","", ""),
-        emptyList()
-        )
-    )
-//    val students = course.value.
+    val studentsWithCourse = viewModel.studentsWithCourse.collectAsState(initial = emptyList())
 
     val scaffoldState = rememberScaffoldState()
-
-    LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.collect { event ->
-            when(event) {
-                is UiEvent.ShowSnackbar -> {
-                    val result = scaffoldState.snackbarHostState.showSnackbar(
-                        message = event.message,
-                        actionLabel = event.action
-                    )
-                    if(result == SnackbarResult.ActionPerformed) {
-//                        viewModel.onEvent(CourseWithStudentListEvent.OnUndoDeleteClick)
-                    }
-                }
-                is UiEvent.Navigate -> onNavigate(event)
-                else -> Unit
-            }
-        }
-    }
 
     Scaffold(
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        floatingActionButton = {
-            FloatingActionButton(
-                backgroundColor = MaterialTheme.colors.primary,
-                onClick = {
-                    onNavigate(UiEvent.Navigate(route = Routes.COURSE_STUDENT_LIST_ADD_EDIT + "/" + course.value.course.courseId))
-                }) {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "Add student to course"
-                )
-            }
-        }
     ) {
         Column(
             modifier = modifier.fillMaxSize(),
         ) {
             Text(
-                text = course.value.course.courseName,
+                text = "Studenci na zajęciach",
                 modifier
                     .fillMaxWidth()
                     .padding(0.dp, 0.dp, 0.dp, 10.dp),
                 textAlign = TextAlign.Center,
-                fontSize = 40.sp
+                fontSize = 30.sp
             )
-            Text(
-                text = "Studenci: ",
-                modifier
-                    .fillMaxWidth()
-                    .padding(5.dp, 0.dp, 0.dp, 10.dp),
-                textAlign = TextAlign.Left,
-                fontSize = 15.sp
-            )
+//            TextField(
+//                value = viewModel.text,
+//                onValueChange = {
+//                    viewModel.onEvent(AddEditCourseWithStudentEvent.OnSearchBarChange(it))
+//                                },
+//                placeholder = {
+//                    Text(text = "Znajdź studenta")
+//                },
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(70.dp)
+//                    .padding(0.dp, 0.dp, 0.dp, 15.dp)
+//            )
             LazyColumn(
                 modifier.fillMaxSize()
             ) {
-                items(items = course.value.students){
+                items(items = studentsWithCourse.value ){
+                    studentWithCourse ->
                     Box{
                         Card(
                             modifier = modifier
                                 .fillMaxWidth()
                                 .padding(5.dp)
                                 .clickable {
-//                                    viewModel.onEvent(CourseWithStudentListEvent.OnStudentClick(it))
+                                    viewModel.onEvent(AddEditCourseWithStudentEvent.OnStudentClick(studentWithCourse))
                                 },
                             elevation = 3.dp,
                             shape = RoundedCornerShape(10.dp),
@@ -141,32 +111,26 @@ fun CourseWithStudentListScreen(
                                     modifier = modifier.fillMaxHeight(),
                                     verticalArrangement = Arrangement.Center,
                                 ) {
-                                    Text(text = it.name + " " + it.lastName, modifier.padding(1.dp, 0.dp, 0.dp, 1.dp))
-                                    Text(text = "Numer albumu: " + it.albumNumber, modifier.padding(1.dp,0.dp, 5.dp, 0.dp))
-                                    Text(text = "Oceny: ", modifier.padding(1.dp,0.dp, 5.dp, 0.dp))
+                                    Text(text = studentWithCourse.student.name + " " + studentWithCourse.student.lastName, modifier.padding(1.dp, 0.dp, 0.dp, 1.dp))
+                                    Text(text = "Numer albumu: " + studentWithCourse.student.albumNumber, modifier.padding(1.dp,0.dp, 5.dp, 0.dp))
                                 }
                             }
                         }
-                        IconButton(
-                            onClick = {
-//                                viewModel.onEvent(CourseWithStudentListEvent.OnDeleteStudentClick(it))
+                        Checkbox(
+                            checked = studentWithCourse.courses.any{ course -> course.courseId == courseId},
+                            onCheckedChange = {
+                                viewModel.onEvent(AddEditCourseWithStudentEvent.OnStudentClick(studentWithCourse))
                             },
                             modifier = Modifier
                                 .offset {
-                                    IntOffset(x = -offsetInPx, y = -offsetInPx)
+                                    IntOffset(x = -offsetInPx, y = 0)
                                 }
                                 .clip(CircleShape)
                                 .background(White)
                                 .size(iconSize)
-                                .align(Alignment.BottomEnd)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = "",
-                            )
-                        }
+                                .align(Alignment.CenterEnd)
+                        )
                     }
-
                 }
             }
         }

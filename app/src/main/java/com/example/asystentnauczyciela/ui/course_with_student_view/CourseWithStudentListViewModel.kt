@@ -1,5 +1,6 @@
 package com.example.asystentnauczyciela.ui.course_with_student_view
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.asystentnauczyciela.data.entities.Student
@@ -14,19 +15,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CourseWithStudentListViewModel @Inject constructor(
-    private val repository: AssistantRepository
+    private val repository: AssistantRepository,
+    private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
-    var courseId: Int = 1
-    var courseName: String = ""
+    var courseId: Int? = savedStateHandle.get("courseId")
 
-    val students = repository.getStudents()
-    val course = repository.getCourseById(courseId)?.let { course ->
-        courseName = course.courseName
-//        weekDay = course.weekDay.toString()
-//        timeBlockFrom = course.timeBlockFrom
-//        timeBlockTo = course.timeBlockTo
-//        this@AddEditCourseViewModel.course = course
-    }
+//    val students = repository.get()
+    val course = repository.getStudentsInCourseById(courseId!!)
 
     private val _uiEvent =  Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()

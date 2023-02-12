@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.asystentnauczyciela.ui.add_edit_course.AddEditCourseScreen
+import com.example.asystentnauczyciela.ui.add_edit_course_with_student_view.AddEditCourseWithStudentScreen
 import com.example.asystentnauczyciela.ui.add_edit_student.AddEditStudentScreen
 import com.example.asystentnauczyciela.ui.course_with_student_view.CourseWithStudentListScreen
 import com.example.asystentnauczyciela.ui.courses_view.CoursesListScreen
@@ -200,7 +201,7 @@ class MainActivity : ComponentActivity() {
 
                             //endregion
 
-                            //region widok Jednego przedmiotu z stuidentami
+                            //region widok Jednego przedmiotu z studentami
                             composable(
                                 route = Routes.COURSE_STUDENT_LIST + "/{courseId}",
                                 arguments = listOf(
@@ -210,6 +211,25 @@ class MainActivity : ComponentActivity() {
                                 )
                             ) {entry ->
                                 CourseWithStudentListScreen(
+                                    onNavigate = {
+                                        navController.navigate(it.route)
+                                    },
+                                    courseId = entry.arguments!!.getInt("courseId")
+                                )
+                            }
+
+                            //endregion
+
+                            //region widok dodania studenta do przedmiotu
+                            composable(
+                                route = Routes.COURSE_STUDENT_LIST_ADD_EDIT + "/{courseId}",
+                                arguments = listOf(
+                                    navArgument(name = "courseId") {
+                                        type = NavType.IntType
+                                    }
+                                )
+                            ) {entry ->
+                                AddEditCourseWithStudentScreen(
                                     onNavigate = {
                                         navController.navigate(it.route)
                                     },

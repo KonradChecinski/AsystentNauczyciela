@@ -4,6 +4,8 @@ import androidx.room.*
 import com.example.asystentnauczyciela.data.entities.Course
 import com.example.asystentnauczyciela.data.entities.Grade
 import com.example.asystentnauczyciela.data.entities.Student
+import com.example.asystentnauczyciela.data.relations.CourseWithStudents
+import com.example.asystentnauczyciela.data.relations.StudentWithCourses
 import com.example.asystentnauczyciela.data.relations.StudentWithGrades
 import kotlinx.coroutines.flow.Flow
 
@@ -41,7 +43,12 @@ interface AssistantDao {
     fun getCourses(): Flow<List<Course>>
 
     @Query("SELECT * FROM Course WHERE courseId = :courseId")
-    fun getCourseById(courseId: Int): Course?
+    suspend fun getCourseById(courseId: Int): Course?
+
+    @Query("SELECT * FROM Course WHERE courseId = :courseId")
+    fun getCourseByIdSync(courseId: Int): Flow<Course>
+
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addCourse(course: Course)
@@ -51,6 +58,33 @@ interface AssistantDao {
 
     //endregion
 
+    //region CourseWithStudents
+
+    @Query("SELECT * FROM Course WHERE courseId = :courseId")
+    fun getStudentsInCourseById(courseId: Int): Flow<CourseWithStudents>
+
+    @Query("DELETE FROM StudentCourseCrossRef WHERE courseId = :courseId AND studentId= :studentId")
+    suspend fun deleteCourseWithStudents(courseId: Int, studentId: Int)
+
+    //endregion
+
+    //region StudentWithCourse
+
+    @Query("SELECT * FROM Student")
+    fun getStudentsWithCourse(): Flow<List<StudentWithCourses>>
+
+    @Query("SELECT * FROM Student WHERE name LIKE '%' || :text || '%' OR lastName LIKE '%' || :text || '%' OR albumNumber LIKE '%' || :text || '%'")
+    fun getStudentsWithCourseSearch(text: String): Flow<List<StudentWithCourses>>
+
+    @Query("INSERT INTO StudentCourseCrossRef VALUES(:studentId, :courseId)")
+    suspend fun addStudentWithCourse(courseId: Int, studentId: Int)
+
+    @Query("DELETE FROM StudentCourseCrossRef  WHERE courseId = :courseId AND studentId= :studentId")
+    suspend fun deleteStudentWithCourse(courseId: Int, studentId: Int)
+
+
+
+    //endregion
 
 //    @Transaction
 //    @Query("SELECT * FROM Student JOIN Grade ON (Student.studentId=Grade.studentId AND classId = :classId) WHERE studentId = :studentId")
