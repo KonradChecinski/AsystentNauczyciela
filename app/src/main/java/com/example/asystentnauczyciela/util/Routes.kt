@@ -10,6 +10,7 @@ object Routes {
 
     //Grade
     const val GRADE_LIST = "grades_view"
+    const val GRADE_ADD_EDIT = "grade_add_edit"
 
     //Course
     const val COURSES_LIST = "courses_view"

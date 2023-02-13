@@ -151,7 +151,7 @@ fun CourseWithStudentListScreen(
                                         Card(
                                             modifier = modifier
                                                 .padding(0.dp, 10.dp, 10.dp, 10.dp)
-                                                .clickable {/*TODO*/},
+                                                .clickable { onNavigate(UiEvent.Navigate(route = Routes.GRADE_ADD_EDIT)) },
                                             elevation = 3.dp,
                                             shape = CutCornerShape(5.dp)
                                         ) {
@@ -160,7 +160,7 @@ fun CourseWithStudentListScreen(
                                         Card(
                                             modifier = modifier
                                                 .padding(0.dp, 10.dp, 10.dp, 10.dp)
-                                                .clickable {/*TODO*/},
+                                                .clickable { onNavigate(UiEvent.Navigate(route = Routes.GRADE_ADD_EDIT)) },
                                             elevation = 3.dp,
                                             shape = CutCornerShape(10.dp)
                                         ) {
@@ -172,7 +172,7 @@ fun CourseWithStudentListScreen(
                         }
                         IconButton(
                             onClick = {
-//                                viewModel.onEvent(CourseWithStudentListEvent.OnDeleteStudentClick(it))
+                                onNavigate(UiEvent.Navigate(route = Routes.GRADE_ADD_EDIT))
                             },
                             modifier = Modifier
                                 .offset {
@@ -185,7 +185,7 @@ fun CourseWithStudentListScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Add,
-                                contentDescription = "",
+                                contentDescription = "Add grade",
                             )
                         }
                     }

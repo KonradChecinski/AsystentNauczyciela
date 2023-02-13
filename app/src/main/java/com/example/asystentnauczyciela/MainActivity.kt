@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.asystentnauczyciela.ui.add_edit_course.AddEditCourseScreen
 import com.example.asystentnauczyciela.ui.add_edit_course_with_student_view.AddEditCourseWithStudentScreen
+import com.example.asystentnauczyciela.ui.add_edit_grade.AddEditGradeScreen
 import com.example.asystentnauczyciela.ui.add_edit_student.AddEditStudentScreen
 import com.example.asystentnauczyciela.ui.course_with_student_view.CourseWithStudentListScreen
 import com.example.asystentnauczyciela.ui.courses_view.CoursesListScreen
@@ -142,35 +143,30 @@ class MainActivity : ComponentActivity() {
 
                             //region Grade
 
-//                            //region Widok ocen Studenta na zajęciach
-//                            composable(
-//                                route = Routes.GRADE_LIST + "/{classID}" + "/{studentID}",
-//                                arguments = listOf(
-//                                    navArgument("classID") {
-//                                        type = NavType.StringType
-//                                        defaultValue = "ID ZAJĘĆ DOMYŚLNY"
-//                                    },
-//                                    navArgument("studentID") {
-//                                        type = NavType.StringType
-//                                        defaultValue = "ID UCZNIA DOMYŚLNY"
-//                                    }
-//                                )
-//                            ) { entry ->
-//                                GradesListScreen(
-//                                    onNavigate = {
-//                                        navController.navigate(it.route)
-//                                    },
-//                                    classID = entry.arguments?.getString("classID").toString(),
-//                                    studentID = entry.arguments?.getString("studentID").toString()
-//                                )
-//                            }
-//                           //endregion
+                            //region Edytowanie lub dodawania ocen lub punktów
+                            composable(
+                                route = Routes.GRADE_ADD_EDIT + "?gradeId={gradeId}",
+                                arguments = listOf(
+                                    navArgument(name = "gradeId") {
+                                        type = NavType.IntType
+                                        defaultValue = -1
+                                    }
+                                )
+                            ) {entry ->
+                                AddEditGradeScreen(
+                                    onPopBackStack = {
+                                        navController.popBackStack()
+                                    },
+                                    gradeId = entry.arguments!!.getInt("gradeId")
+                                )
+                            }
+                           //endregion
 
                             //endregion
 
                             //region Course
 
-                            //region widok wszystkich przemiotow
+                            //region widok wszystkich przedmiotów
                             composable(route = Routes.COURSES_LIST) {
                                 CoursesListScreen(
                                     onNavigate = {
@@ -181,7 +177,7 @@ class MainActivity : ComponentActivity() {
 
                             //endregion
 
-                            //region Widok edycji / dodawnia przedmiotów
+                            //region Widok edycji / dodawania przedmiotów
                             composable(
                                 route = Routes.COURSE_ADD_EDIT + "?courseId={courseId}",
                                 arguments = listOf(
