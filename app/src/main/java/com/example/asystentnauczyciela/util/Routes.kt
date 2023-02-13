@@ -21,4 +21,9 @@ object Routes {
 
     const val COURSE_STUDENT_LIST_ADD_EDIT = "course_student_list_add_edit"
 
+
+    //Clear DB
+    const val CLEAR_DB = "clear_db"
+
+
 }

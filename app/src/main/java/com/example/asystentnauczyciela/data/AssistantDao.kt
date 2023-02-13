@@ -83,7 +83,6 @@ interface AssistantDao {
     suspend fun deleteStudentWithCourse(courseId: Int, studentId: Int)
 
 
-
     //endregion
 
 //    @Transaction

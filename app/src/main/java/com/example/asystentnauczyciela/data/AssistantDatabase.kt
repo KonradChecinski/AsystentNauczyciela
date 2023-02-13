@@ -10,7 +10,7 @@ import com.example.asystentnauczyciela.data.relations.StudentCourseCrossRef
 
 @Database(
     entities = [Student::class, Grade::class, Course::class, StudentCourseCrossRef::class],
-    version = 5
+    version = 6
 )
 abstract class AssistantDatabase: RoomDatabase() {
 

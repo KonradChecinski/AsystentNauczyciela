@@ -39,7 +39,7 @@ fun StudentsListScreen(
     modifier: Modifier = Modifier,
     viewModel: StudentsListViewModel = hiltViewModel()
 ) {
-    val iconSize = 24.dp
+    val iconSize = 30.dp
     val offsetInPx = LocalDensity.current.run { (iconSize / 2).roundToPx() }
 
     val students = viewModel.students.collectAsState(initial = emptyList())
@@ -131,9 +131,10 @@ fun StudentsListScreen(
                                     IntOffset(x = -offsetInPx, y = +offsetInPx)
                                 }
                                 .clip(CircleShape)
-                                .background(White)
+                                .background(MaterialTheme.colors.background)
                                 .size(iconSize)
                                 .align(Alignment.TopEnd)
+                                .padding(5.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Delete,

@@ -4,11 +4,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarResult
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,16 +24,20 @@ import com.example.asystentnauczyciela.ui.add_edit_course.AddEditCourseScreen
 import com.example.asystentnauczyciela.ui.add_edit_course_with_student_view.AddEditCourseWithStudentScreen
 import com.example.asystentnauczyciela.ui.add_edit_grade.AddEditGradeScreen
 import com.example.asystentnauczyciela.ui.add_edit_student.AddEditStudentScreen
+import com.example.asystentnauczyciela.ui.clear_db_view.ClearDBScreen
 import com.example.asystentnauczyciela.ui.course_with_student_view.CourseWithStudentListScreen
 import com.example.asystentnauczyciela.ui.courses_view.CoursesListScreen
 import com.example.asystentnauczyciela.ui.drawer_menu.AppBar
 import com.example.asystentnauczyciela.ui.drawer_menu.DrawerBody
 import com.example.asystentnauczyciela.ui.drawer_menu.DrawerHeader
 import com.example.asystentnauczyciela.ui.drawer_menu.MenuItem
+import com.example.asystentnauczyciela.ui.students_view.StudentsListEvent
 import com.example.asystentnauczyciela.ui.students_view.StudentsListScreen
 import com.example.asystentnauczyciela.ui.theme.AssistantAppTheme
 import com.example.asystentnauczyciela.util.Routes
+import com.example.asystentnauczyciela.util.UiEvent
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -39,6 +49,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val scaffoldState = rememberScaffoldState()
                 val scope = rememberCoroutineScope()
+
                 Scaffold(
                     scaffoldState = scaffoldState,
                     topBar = {
@@ -73,6 +84,24 @@ class MainActivity : ComponentActivity() {
                             ),
                             onItemClick = {
                                navController.navigate(it.route)
+                                scope.launch {
+                                    scaffoldState.drawerState.close()
+                                }
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(50.dp))
+                        DrawerBody(
+                            items = listOf(
+                                MenuItem(
+                                    id = "db",
+                                    title = "Wyczyść bazę danych",
+                                    contentDescription = "Wyczyść bazę danych",
+                                    icon = ImageVector.vectorResource(id = R.drawable.database),
+                                    route = Routes.CLEAR_DB
+                                )
+                            ),
+                            onItemClick = {
+                                navController.navigate(it.route)
                                 scope.launch {
                                     scaffoldState.drawerState.close()
                                 }
@@ -235,6 +264,17 @@ class MainActivity : ComponentActivity() {
 
                             //endregion
 
+                            //endregion
+
+
+                            //region Clear DB
+                            composable(route = Routes.CLEAR_DB) {
+                                ClearDBScreen(
+                                    onNavigate = {
+                                        navController.navigate(it.route)
+                                    }
+                                )
+                            }
                             //endregion
 
                         }

@@ -47,7 +47,7 @@ fun CourseWithStudentListScreen(
     viewModel: CourseWithStudentListViewModel = hiltViewModel()
 ) {
 
-    val iconSize = 24.dp
+    val iconSize = 36.dp
     val offsetInPx = LocalDensity.current.run { (iconSize / 2).roundToPx() }
 
     val course = viewModel.course.collectAsState(initial = CourseWithStudents(
@@ -143,7 +143,7 @@ fun CourseWithStudentListScreen(
                                     modifier = modifier.fillMaxHeight(),
                                     verticalArrangement = Arrangement.Center,
                                 ) {
-                                    Text(text = it.name + " " + it.lastName, modifier.padding(1.dp, 0.dp, 0.dp, 1.dp))
+                                    Text(text = it.name + " " + it.lastName, modifier.padding(1.dp, 5.dp, 0.dp, 1.dp))
                                     Text(text = "Numer albumu: " + it.albumNumber, modifier.padding(1.dp,0.dp, 5.dp, 0.dp))
                                     Text(text = "Oceny: ", modifier.padding(1.dp,0.dp, 5.dp, 0.dp))
 
@@ -179,7 +179,7 @@ fun CourseWithStudentListScreen(
                                     IntOffset(x = -offsetInPx, y = -offsetInPx)
                                 }
                                 .clip(CircleShape)
-                                .background(White)
+                                .background(MaterialTheme.colors.background)
                                 .size(iconSize)
                                 .align(Alignment.BottomEnd)
                         ) {

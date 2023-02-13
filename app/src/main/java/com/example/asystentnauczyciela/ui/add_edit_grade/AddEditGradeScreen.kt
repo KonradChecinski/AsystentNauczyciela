@@ -1,11 +1,15 @@
 package com.example.asystentnauczyciela.ui.add_edit_grade
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
@@ -22,11 +26,14 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.asystentnauczyciela.R
 import com.example.asystentnauczyciela.ui.add_edit_course_with_student_view.AddEditCourseWithStudentEvent
 
@@ -34,7 +41,7 @@ import com.example.asystentnauczyciela.ui.add_edit_course_with_student_view.AddE
 @Composable
 fun AddEditGradeScreen(
     onPopBackStack: () -> Unit,
-//    viewModel: AddEditCourseViewModel = hiltViewModel(),
+    viewModel: AddEditGradeViewModel = hiltViewModel(),
     gradeId: Int
 ) {
     val scaffoldState = rememberScaffoldState()
@@ -42,23 +49,11 @@ fun AddEditGradeScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
 
+    var isPoints by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
     val suggestions = listOf("2", "2.5", "3", "3.5", "4", "4.5", "5")
     var textfieldSize by remember { mutableStateOf(Size.Zero)}
 
-
-//    val timePickerDialogFrom = TimePickerDialog(
-//        LocalContext.current,
-//        {_, hour:Int, minute: Int->
-//            viewModel.onEvent(AddEditCourseEvent.OnTimeFromBlockChange(checkDigit(hour)+":"+checkDigit(minute)))
-//        }, 0, 0, true
-//    )
-//    val timePickerDialogTo = TimePickerDialog(
-//        LocalContext.current,
-//        {_, hour:Int, minute: Int->
-//            viewModel.onEvent(AddEditCourseEvent.OnTimeToBlockChange(checkDigit(hour)+":"+checkDigit(minute)))
-//        }, 0, 0, true
-//    )
 
     val icon = if (expanded)
         Icons.Filled.KeyboardArrowUp
@@ -85,17 +80,36 @@ fun AddEditGradeScreen(
             .fillMaxSize()
             .padding(16.dp),
         floatingActionButton = {
-            FloatingActionButton(
-                backgroundColor = MaterialTheme.colors.primary,
-                onClick = {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ){
+                FloatingActionButton(
+                    backgroundColor = MaterialTheme.colors.primary,
+                    onClick = {
 //                viewModel.onEvent(AddEditCourseEvent.OnSaveCourseClick)
-            }) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.save),
-                    contentDescription = "Save"
-                )
+                    }) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Save"
+                    )
+                }
+
+                FloatingActionButton(
+                    backgroundColor = MaterialTheme.colors.primary,
+                    onClick = {
+//                viewModel.onEvent(AddEditCourseEvent.OnSaveCourseClick)
+                    }) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.save),
+                        contentDescription = "Save"
+                    )
+                }
             }
-        }
+
+        },
+        floatingActionButtonPosition = FabPosition.Center,
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -112,27 +126,44 @@ fun AddEditGradeScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Row() {
-                Text("Wpisz punkty: ")
+                Text("Punkty zamiast oceny ")
                 Checkbox(
-                    checked = false,
+                    checked = isPoints,
                     onCheckedChange = {
 //                        viewModel.onEvent(AddEditCourseWithStudentEvent.OnStudentClick(studentWithCourse))
+                                      isPoints=!isPoints
                     },
                     modifier = Modifier
                         .clip(CircleShape)
-                        .background(Color.White)
+                        .background(Color.Transparent)
                         .size(25.dp)
                         .align(Alignment.CenterVertically)
                 )
             }
 
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-            Column() {
+            if(isPoints){
                 OutlinedTextField(
-                    value = "ocena",
+                    value = "",
                     onValueChange = { /* viewModel.onEvent(AddEditCourseEvent.OnWeekDayChange(it)) */ },
-                    readOnly=true,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    label = { Text("Punkty") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus()
+                            keyboardController?.hide()
+                        }
+                    )
+                )
+            }else{
+                Column() {
+                    OutlinedTextField(
+                        value = "ocena",
+                        onValueChange = { /* viewModel.onEvent(AddEditCourseEvent.OnWeekDayChange(it)) */ },
+                        readOnly=true,
 
 //                    colors = TextFieldDefaults.outlinedTextFieldColors(
 //                        disabledTextColor = LocalContentColor.current.copy(LocalContentAlpha.current),
@@ -140,36 +171,37 @@ fun AddEditGradeScreen(
 //                        disabledBorderColor = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled),
 //                        disabledLabelColor = MaterialTheme.colors.primary,
 //                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onGloballyPositioned { coordinates ->
-                            //This value is used to assign to the DropDown the same width
-                            textfieldSize = coordinates.size.toSize()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onGloballyPositioned { coordinates ->
+                                //This value is used to assign to the DropDown the same width
+                                textfieldSize = coordinates.size.toSize()
+                            }
+                            .clickable { expanded = !expanded },
+                        label = { Text("Ocena") },
+                        trailingIcon = {
+                            Icon(icon, "contentDescription",
+                                Modifier.clickable { expanded = !expanded })
                         }
-                        .clickable { expanded = !expanded },
-                    label = { Text("Ocena") },
-                    trailingIcon = {
-                        Icon(icon, "contentDescription",
-                            Modifier.clickable { expanded = !expanded })
-                    }
-                )
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    modifier = Modifier
-                        .width(with(LocalDensity.current) { textfieldSize.width.toDp() })
-                ) {
-                    suggestions.forEach { label ->
-                        DropdownMenuItem(onClick = {
+                    )
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier
+                            .width(with(LocalDensity.current) { textfieldSize.width.toDp() })
+                    ) {
+                        suggestions.forEach { label ->
+                            DropdownMenuItem(onClick = {
 //                            viewModel.onEvent(AddEditCourseEvent.OnWeekDayChange(label))
-                            expanded = false
-                        }) {
-                            Text(text = label)
+                                expanded = false
+                            }) {
+                                Text(text = label)
+                            }
                         }
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
+
         }
     }
 }

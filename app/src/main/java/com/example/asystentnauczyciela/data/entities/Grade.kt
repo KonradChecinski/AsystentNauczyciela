@@ -9,6 +9,8 @@ data class Grade(
     val studentId: Int,
     val classId: Int,
 
+    val isPoints: Boolean,
+
     val gradeValue: Double?,
     val points: Int?,
 ) {

@@ -41,7 +41,7 @@ fun CoursesListScreen(
     modifier: Modifier = Modifier,
     viewModel: CoursesListViewModel = hiltViewModel()
 ) {
-    val iconSize = 24.dp
+    val iconSize = 30.dp
     val offsetInPx = LocalDensity.current.run { (iconSize / 2).roundToPx() }
 
     val classes = viewModel.courses.collectAsState(initial = emptyList())
@@ -136,9 +136,10 @@ fun CoursesListScreen(
                                     IntOffset(x = -offsetInPx, y = +offsetInPx)
                                 }
                                 .clip(CircleShape)
-                                .background(Color.White)
+                                .background(MaterialTheme.colors.background)
                                 .size(iconSize)
                                 .align(Alignment.TopEnd)
+                                .padding(5.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Edit,
@@ -153,9 +154,10 @@ fun CoursesListScreen(
                                     IntOffset(x = -offsetInPx, y = -offsetInPx)
                                 }
                                 .clip(CircleShape)
-                                .background(Color.White)
+                                .background(MaterialTheme.colors.background)
                                 .size(iconSize)
                                 .align(Alignment.BottomEnd)
+                                .padding(5.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Delete,

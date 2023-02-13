@@ -1,6 +1,5 @@
 package com.example.asystentnauczyciela.ui.add_edit_course_with_student_view
 
-import android.graphics.Color
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,6 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
@@ -44,7 +44,7 @@ fun AddEditCourseWithStudentScreen(
     courseId: Int,
     viewModel: AddEditCourseWithStudentViewModel = hiltViewModel()
 ) {
-    val iconSize = 24.dp
+    val iconSize = 30.dp
     val offsetInPx = LocalDensity.current.run { (iconSize / 2).roundToPx() }
 
     val studentsWithCourse = viewModel.studentsWithCourse.collectAsState(initial = emptyList())
@@ -126,9 +126,10 @@ fun AddEditCourseWithStudentScreen(
                                     IntOffset(x = -offsetInPx, y = 0)
                                 }
                                 .clip(CircleShape)
-                                .background(White)
+                                .background(Color.Transparent)
                                 .size(iconSize)
                                 .align(Alignment.CenterEnd)
+                                .padding(5.dp)
                         )
                     }
                 }
