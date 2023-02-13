@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
@@ -144,6 +146,27 @@ fun CourseWithStudentListScreen(
                                     Text(text = it.name + " " + it.lastName, modifier.padding(1.dp, 0.dp, 0.dp, 1.dp))
                                     Text(text = "Numer albumu: " + it.albumNumber, modifier.padding(1.dp,0.dp, 5.dp, 0.dp))
                                     Text(text = "Oceny: ", modifier.padding(1.dp,0.dp, 5.dp, 0.dp))
+
+                                    Row() {
+                                        Card(
+                                            modifier = modifier
+                                                .padding(0.dp, 10.dp, 10.dp, 10.dp)
+                                                .clickable {/*TODO*/},
+                                            elevation = 3.dp,
+                                            shape = CutCornerShape(5.dp)
+                                        ) {
+                                            Text(text = "5", modifier = modifier.padding(10.dp))
+                                        }
+                                        Card(
+                                            modifier = modifier
+                                                .padding(0.dp, 10.dp, 10.dp, 10.dp)
+                                                .clickable {/*TODO*/},
+                                            elevation = 3.dp,
+                                            shape = CutCornerShape(10.dp)
+                                        ) {
+                                            Text(text = "3.5", modifier = modifier.padding(10.dp))
+                                        }
+                                    }
                                 }
                             }
                         }
