@@ -1,12 +1,10 @@
 package com.example.asystentnauczyciela.data
 
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
 import com.example.asystentnauczyciela.data.entities.Course
 import com.example.asystentnauczyciela.data.entities.Grade
 import com.example.asystentnauczyciela.data.entities.Student
 import com.example.asystentnauczyciela.data.relations.CourseWithStudents
+import com.example.asystentnauczyciela.data.relations.CourseWithStudentsWithGrades
 import com.example.asystentnauczyciela.data.relations.StudentWithCourses
 import com.example.asystentnauczyciela.data.relations.StudentWithGrades
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +36,14 @@ class AssistantRepositoryImpl(
     //Grade
     override suspend fun addGrade(grade: Grade) {
         dao.addGrade(grade)
+    }
+
+    override suspend fun getGradeById(gradeId: Int): Grade? {
+        return dao.getGradeById(gradeId)
+    }
+
+    override suspend fun deleteGrade(grade: Grade) {
+        dao.deleteGrade(grade)
     }
 
     //Course
@@ -87,6 +93,11 @@ class AssistantRepositoryImpl(
         dao.deleteStudentWithCourse(courseId, studentId)
     }
 
+
+
+    override fun getStudentsInCourseWithGradesById(courseId: Int): Flow<CourseWithStudentsWithGrades> {
+        return dao.getStudentsInCourseWithGradesById(courseId)
+    }
 //    override suspend fun getStudentWithGradesInCourse(studentId: Int, classId: Int): List<StudentWithGrades>{
 //        return dao.getStudentWithGradesInCourse(studentId, classId)
 //    }

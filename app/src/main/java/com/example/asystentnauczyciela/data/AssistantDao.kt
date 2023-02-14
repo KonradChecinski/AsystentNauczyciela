@@ -5,6 +5,7 @@ import com.example.asystentnauczyciela.data.entities.Course
 import com.example.asystentnauczyciela.data.entities.Grade
 import com.example.asystentnauczyciela.data.entities.Student
 import com.example.asystentnauczyciela.data.relations.CourseWithStudents
+import com.example.asystentnauczyciela.data.relations.CourseWithStudentsWithGrades
 import com.example.asystentnauczyciela.data.relations.StudentWithCourses
 import com.example.asystentnauczyciela.data.relations.StudentWithGrades
 import kotlinx.coroutines.flow.Flow
@@ -34,6 +35,12 @@ interface AssistantDao {
     //region Grade
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addGrade(grade: Grade)
+
+    @Query("SELECT * FROM Grade WHERE gradeId = :gradeId")
+    suspend fun getGradeById(gradeId: Int): Grade?
+
+    @Delete
+    suspend fun deleteGrade(grade: Grade)
 
     //endregion
 
@@ -84,6 +91,11 @@ interface AssistantDao {
 
 
     //endregion
+
+
+
+    @Query("SELECT * FROM Course WHERE courseId = :courseId")
+    fun getStudentsInCourseWithGradesById(courseId: Int): Flow<CourseWithStudentsWithGrades>
 
 //    @Transaction
 //    @Query("SELECT * FROM Student JOIN Grade ON (Student.studentId=Grade.studentId AND classId = :classId) WHERE studentId = :studentId")

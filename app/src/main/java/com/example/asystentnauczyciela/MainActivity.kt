@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarResult
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -31,13 +29,10 @@ import com.example.asystentnauczyciela.ui.drawer_menu.AppBar
 import com.example.asystentnauczyciela.ui.drawer_menu.DrawerBody
 import com.example.asystentnauczyciela.ui.drawer_menu.DrawerHeader
 import com.example.asystentnauczyciela.ui.drawer_menu.MenuItem
-import com.example.asystentnauczyciela.ui.students_view.StudentsListEvent
 import com.example.asystentnauczyciela.ui.students_view.StudentsListScreen
 import com.example.asystentnauczyciela.ui.theme.AssistantAppTheme
 import com.example.asystentnauczyciela.util.Routes
-import com.example.asystentnauczyciela.util.UiEvent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -174,19 +169,30 @@ class MainActivity : ComponentActivity() {
 
                             //region Edytowanie lub dodawania ocen lub punktów
                             composable(
-                                route = Routes.GRADE_ADD_EDIT + "?gradeId={gradeId}",
+                                route = Routes.GRADE_ADD_EDIT + "?gradeId={gradeId}&courseId={courseId}&studentId={studentId}",
                                 arguments = listOf(
                                     navArgument(name = "gradeId") {
                                         type = NavType.IntType
                                         defaultValue = -1
+                                    },
+                                    navArgument(name = "courseId") {
+                                        type = NavType.IntType
+                                        defaultValue = -1
+                                    },
+                                    navArgument(name = "studentId") {
+                                        type = NavType.IntType
+                                        defaultValue = -1
                                     }
+
                                 )
                             ) {entry ->
                                 AddEditGradeScreen(
                                     onPopBackStack = {
                                         navController.popBackStack()
                                     },
-                                    gradeId = entry.arguments!!.getInt("gradeId")
+                                    gradeId = entry.arguments!!.getInt("gradeId"),
+                                    courseId = entry.arguments!!.getInt("gradeId"),
+                                    studentId = entry.arguments!!.getInt("gradeId")
                                 )
                             }
                            //endregion

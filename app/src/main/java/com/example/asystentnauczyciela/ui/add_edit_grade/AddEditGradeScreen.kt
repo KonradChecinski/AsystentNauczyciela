@@ -1,7 +1,6 @@
 package com.example.asystentnauczyciela.ui.add_edit_grade
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -29,27 +28,27 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.asystentnauczyciela.R
-import com.example.asystentnauczyciela.ui.add_edit_course_with_student_view.AddEditCourseWithStudentEvent
+import com.example.asystentnauczyciela.util.UiEvent
+import kotlinx.coroutines.flow.collect
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddEditGradeScreen(
     onPopBackStack: () -> Unit,
     viewModel: AddEditGradeViewModel = hiltViewModel(),
-    gradeId: Int
+    gradeId: Int,
+    studentId: Int?,
+    courseId: Int?
 ) {
     val scaffoldState = rememberScaffoldState()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-
-    var isPoints by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
     val suggestions = listOf("2", "2.5", "3", "3.5", "4", "4.5", "5")
     var textfieldSize by remember { mutableStateOf(Size.Zero)}
@@ -60,46 +59,64 @@ fun AddEditGradeScreen(
     else
         Icons.Filled.KeyboardArrowDown
 
-//    LaunchedEffect(key1 = true) {
-//        viewModel.uiEvent.collect { event ->
-//            when(event) {
-//                is UiEvent.PopBackStack -> onPopBackStack()
-//                is UiEvent.ShowSnackbar -> {
-//                    scaffoldState.snackbarHostState.showSnackbar(
-//                        message = event.message,
-//                        actionLabel = event.action
-//                    )
-//                }
-//                else -> Unit
-//            }
-//        }
-//    }
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collect { event ->
+            when(event) {
+                is UiEvent.ShowSnackbar -> {
+                    val result = scaffoldState.snackbarHostState.showSnackbar(
+                        message = event.message,
+                        actionLabel = event.action
+                    )
+                    if(result == SnackbarResult.ActionPerformed) {
+                        viewModel.onEvent(AddEditGradeEvent.OnConfirmDeleteGradeClick)
+                    }
+                }
+                is UiEvent.PopBackStack -> onPopBackStack()
+                else -> Unit
+            }
+        }
+    }
+
     Scaffold(
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         floatingActionButton = {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth()
-            ){
-                FloatingActionButton(
-                    backgroundColor = MaterialTheme.colors.primary,
-                    onClick = {
-//                viewModel.onEvent(AddEditCourseEvent.OnSaveCourseClick)
-                    }) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Save"
-                    )
-                }
+            if(gradeId!=-1){
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ){
+                    FloatingActionButton(
+                        backgroundColor = MaterialTheme.colors.primary,
+                        onClick = {
+                            viewModel.onEvent(AddEditGradeEvent.OnDeleteGradeClick)
+                        }) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Save"
+                        )
+                    }
 
+                    FloatingActionButton(
+                        backgroundColor = MaterialTheme.colors.primary,
+                        onClick = {
+                            viewModel.onEvent(AddEditGradeEvent.OnSaveGradeClick)
+                        }) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.save),
+                            contentDescription = "Save"
+                        )
+                    }
+                }
+            }else{
                 FloatingActionButton(
                     backgroundColor = MaterialTheme.colors.primary,
                     onClick = {
-//                viewModel.onEvent(AddEditCourseEvent.OnSaveCourseClick)
+                        viewModel.onEvent(AddEditGradeEvent.OnSaveGradeClick)
                     }) {
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.save),
@@ -108,8 +125,9 @@ fun AddEditGradeScreen(
                 }
             }
 
+
         },
-        floatingActionButtonPosition = FabPosition.Center,
+        floatingActionButtonPosition = if(gradeId!=-1) FabPosition.Center else FabPosition.End,
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -128,10 +146,9 @@ fun AddEditGradeScreen(
             Row() {
                 Text("Punkty zamiast oceny ")
                 Checkbox(
-                    checked = isPoints,
+                    checked = viewModel.isPoints,
                     onCheckedChange = {
-//                        viewModel.onEvent(AddEditCourseWithStudentEvent.OnStudentClick(studentWithCourse))
-                                      isPoints=!isPoints
+                        viewModel.onEvent(AddEditGradeEvent.OnCheckBoxClick(!viewModel.isPoints))
                     },
                     modifier = Modifier
                         .clip(CircleShape)
@@ -143,10 +160,10 @@ fun AddEditGradeScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            if(isPoints){
+            if(viewModel.isPoints){
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = { /* viewModel.onEvent(AddEditCourseEvent.OnWeekDayChange(it)) */ },
+                    value =  if(viewModel.points != null) viewModel.points.toString() else "",
+                    onValueChange = { viewModel.onEvent(AddEditGradeEvent.OnPointsChange(it)) },
                     modifier = Modifier
                         .fillMaxWidth(),
                     label = { Text("Punkty") },
@@ -161,16 +178,9 @@ fun AddEditGradeScreen(
             }else{
                 Column() {
                     OutlinedTextField(
-                        value = "ocena",
-                        onValueChange = { /* viewModel.onEvent(AddEditCourseEvent.OnWeekDayChange(it)) */ },
+                        value = if(viewModel.gradeValue != null) viewModel.gradeValue.toString() else "",
+                        onValueChange = { viewModel.onEvent(AddEditGradeEvent.OnGradeChange(it)) },
                         readOnly=true,
-
-//                    colors = TextFieldDefaults.outlinedTextFieldColors(
-//                        disabledTextColor = LocalContentColor.current.copy(LocalContentAlpha.current),
-//                        backgroundColor = TextFieldDefaults.textFieldColors().backgroundColor(enabled = true).value.copy(),
-//                        disabledBorderColor = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled),
-//                        disabledLabelColor = MaterialTheme.colors.primary,
-//                    ),
                         modifier = Modifier
                             .fillMaxWidth()
                             .onGloballyPositioned { coordinates ->
@@ -192,7 +202,7 @@ fun AddEditGradeScreen(
                     ) {
                         suggestions.forEach { label ->
                             DropdownMenuItem(onClick = {
-//                            viewModel.onEvent(AddEditCourseEvent.OnWeekDayChange(label))
+                            viewModel.onEvent(AddEditGradeEvent.OnGradeChange(label))
                                 expanded = false
                             }) {
                                 Text(text = label)
@@ -201,7 +211,6 @@ fun AddEditGradeScreen(
                     }
                 }
             }
-
         }
     }
 }

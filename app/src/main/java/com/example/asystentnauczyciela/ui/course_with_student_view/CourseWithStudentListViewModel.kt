@@ -21,7 +21,8 @@ class CourseWithStudentListViewModel @Inject constructor(
     var courseId: Int? = savedStateHandle.get("courseId")
 
 //    val students = repository.get()
-    val course = repository.getStudentsInCourseById(courseId!!)
+//    val course = repository.getStudentsInCourseById(courseId!!)
+    val course = repository.getStudentsInCourseWithGradesById(courseId!!)
 
     private val _uiEvent =  Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()

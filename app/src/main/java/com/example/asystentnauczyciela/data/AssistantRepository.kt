@@ -1,12 +1,10 @@
 package com.example.asystentnauczyciela.data
 
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
 import com.example.asystentnauczyciela.data.entities.Course
 import com.example.asystentnauczyciela.data.entities.Grade
 import com.example.asystentnauczyciela.data.entities.Student
 import com.example.asystentnauczyciela.data.relations.CourseWithStudents
+import com.example.asystentnauczyciela.data.relations.CourseWithStudentsWithGrades
 import com.example.asystentnauczyciela.data.relations.StudentWithCourses
 import com.example.asystentnauczyciela.data.relations.StudentWithGrades
 import kotlinx.coroutines.flow.Flow
@@ -25,6 +23,10 @@ interface AssistantRepository {
 
     //Grade
     suspend fun addGrade(grade: Grade)
+
+    suspend fun getGradeById(gradeId: Int): Grade?
+
+    suspend fun deleteGrade(grade: Grade)
 
 
     //Course
@@ -51,6 +53,9 @@ interface AssistantRepository {
 
     suspend fun deleteStudentWithCourse(courseId: Int, studentId: Int)
 
+
+
+    fun getStudentsInCourseWithGradesById(courseId: Int): Flow<CourseWithStudentsWithGrades>
 //    suspend fun getStudentWithGradesInCourse(studentId: Int, classId: Int): List<StudentWithGrades>
 
 }
